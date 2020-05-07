@@ -294,6 +294,27 @@ class PainterroProc {
         this.closeActiveTool();
       },
     }, {
+      name: 'rotateL',
+      hotkey: 'e',
+      activate: () => {
+        const w = this.size.w;
+        const h = this.size.h;
+        const tmpData = this.ctx.getImageData(0, 0, this.size.w, this.size.h);
+        const tmpCan = this.doc.createElement('canvas');
+        tmpCan.width = w;
+        tmpCan.height = h;
+        tmpCan.getContext('2d').putImageData(tmpData, 0, 0);
+        this.resize(h, w);
+        this.ctx.save();
+        this.ctx.translate(h / 2, w / 2);
+        this.ctx.rotate((90 * Math.PI) / 180);
+        this.ctx.drawImage(tmpCan, -w / 2, -h / 2);
+        this.adjustSizeFull();
+        this.ctx.restore();
+        this.worklog.captureState();
+        this.closeActiveTool();
+      },
+    }, {
       name: 'resize',
       activate: () => {
         this.resizer.open();
