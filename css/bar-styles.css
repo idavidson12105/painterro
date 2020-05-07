@@ -71,16 +71,17 @@ select.ptro-input[data-id='fontName'] {
     width: 40px;
     font-size: 16px;
     line-height: normal;
+    z-index: 10;
 }
 
 .ptro-bar .ptro-icon-btn {
-    margin: 4px 0 0 4px;
+    margin: 2px 4px;
+    padding: 0;
 }
 
 button.ptro-icon-right:first-of-type {
     margin-right: 4px;
 }
-
 
 @-webkit-keyframes ptro-spin {
   0% {
