@@ -338,7 +338,7 @@ td.ptro-resize-table-left {
 
 .ptro-wrapper .ptro-color-alpha-label,
 .ptro-wrapper .ptro-label  {
-    float: left;
+    text-align: left;
     padding: 0 2px 0 0;
     margin-left: 5px;
     font-family: "Open Sans", sans-serif;
@@ -491,6 +491,7 @@ span.ptro-btn-color-checkers-bar {
 
 input.ptro-resize-width-input,
 input.ptro-resize-heigth-input,
+input.ptro-line-width-input,
 input.ptro-pixel-size-input {
     line-height: 22px;
     padding: 0 0 0 4px;

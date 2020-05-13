@@ -40,18 +40,24 @@ class PainterroProc {
         alpha: this.params.activeFillColorAlpha,
         alphaColor: this.params.activeFillAlphaColor,
       },
+      textFill: {
+        target: 'textFill',
+        palleteColor: this.params.activeTextFillColor,
+        alpha: this.params.activeTextFillColorAlpha,
+        alphaColor: this.params.activeTextFillAlphaColor,
+      },
       bg: {
         target: 'bg',
         palleteColor: this.params.backgroundFillColor,
         alpha: this.params.backgroundFillColorAlpha,
         alphaColor: this.params.backgroundFillAlphaColor,
       },
-      // stroke: {
-      //   target: 'stroke',
-      //   palleteColor: this.params.textStrokeColor,
-      //   alpha: this.params.textStrokeColorAlpha,
-      //   alphaColor: this.params.textStrokeAlphaColor,
-      // },
+      stroke: {
+        target: 'stroke',
+        palleteColor: this.params.textStrokeColor,
+        alpha: this.params.textStrokeColorAlpha,
+        alphaColor: this.params.textStrokeAlphaColor,
+      },
     };
     this.currentBackground = this.colorWidgetState.bg.alphaColor;
     this.currentBackgroundAlpha = this.colorWidgetState.bg.alpha;
@@ -68,7 +74,7 @@ class PainterroProc {
         this.select.close();
         this.toolContainer.style.cursor = 'auto';
       },
-      eventListner: () => this.select,
+      eventListener: () => this.select,
     }, {
       name: 'crop',
       hotkey: 'c',
@@ -100,7 +106,7 @@ class PainterroProc {
         this.toolContainer.style.cursor = 'crosshair';
         this.primitiveTool.activate('line');
       },
-      eventListner: () => this.primitiveTool,
+      eventListener: () => this.primitiveTool,
     }, {
       name: 'arrow',
       hotkey: 'a',
@@ -119,7 +125,7 @@ class PainterroProc {
         this.toolContainer.style.cursor = 'crosshair';
         this.primitiveTool.activate('arrow');
       },
-      eventListner: () => this.primitiveTool,
+      eventListener: () => this.primitiveTool,
     }, {
       name: 'rect',
       controls: [{
@@ -144,7 +150,7 @@ class PainterroProc {
         this.toolContainer.style.cursor = 'crosshair';
         this.primitiveTool.activate('rect');
       },
-      eventListner: () => this.primitiveTool,
+      eventListener: () => this.primitiveTool,
     }, {
       name: 'ellipse',
       controls: [{
@@ -169,7 +175,7 @@ class PainterroProc {
         this.toolContainer.style.cursor = 'crosshair';
         this.primitiveTool.activate('ellipse');
       },
-      eventListner: () => this.primitiveTool,
+      eventListener: () => this.primitiveTool,
     }, {
       name: 'brush',
       hotkey: 'b',
@@ -187,7 +193,7 @@ class PainterroProc {
         this.toolContainer.style.cursor = 'crosshair';
         this.primitiveTool.activate('brush');
       },
-      eventListner: () => this.primitiveTool,
+      eventListener: () => this.primitiveTool,
     }, {
       name: 'eraser',
       controls: [this.controlBuilder.buildEraserWidthControl(0),
@@ -196,100 +202,22 @@ class PainterroProc {
         this.toolContainer.style.cursor = 'crosshair';
         this.primitiveTool.activate('eraser');
       },
-      eventListner: () => this.primitiveTool,
+      eventListener: () => this.primitiveTool,
     }, {
       name: 'text',
       hotkey: 't',
-      controls: [
-        {
-          type: 'color',
-          title: 'textColor',
-          titleFull: 'textColorFull',
-          target: 'line',
-          action: () => {
-            this.colorPicker.open(this.colorWidgetState.line, (c) => {
-              this.textTool.setFontColor(c.alphaColor);
-            });
-          },
-        }, this.controlBuilder.buildFontSizeControl(1),
-        {
-          type: 'dropdown',
-          title: 'fontName',
-          titleFull: 'fontNameFull',
-          target: 'fontName',
-          action: () => {
-            const dropdown = document.getElementById(this.activeTool.controls[2].id);
-            const font = dropdown.value;
-            this.textTool.setFont(font);
-          },
-          getValue: () => this.textTool.getFont(),
-          getAvailableValues: () => TextTool.getFonts(),
-        }, {
-          type: 'dropdown',
-          title: 'fontStyle',
-          titleFull: 'fontStyleFull',
-          target: 'fontStyle',
-          action: () => {
-            const dropdown = document.getElementById(this.activeTool.controls[3].id);
-            const style = dropdown.value;
-            this.textTool.setFontStyle(style);
-          },
-          getValue: () => this.textTool.getFontStyle(),
-          getAvailableValues: () => TextTool.getFontStyles(),
-        },
-        // {
-        //   type: 'int',
-        //   title: 'fontStrokeSize',
-        //   titleFull: 'fontStrokeSizeFull',
-        //   target: 'fontStrokeSize',
-        //   min: 0,
-        //   max: 200,
-        //   action: () => {
-        //     const inp = document.getElementById(this.activeTool.controls[4].id).value;
-        //     this.textTool.setFontStrokeSize(inp);
-        //     setParam('fontStrokeSize', inp);
-        //   },
-        //   getValue: () => this.textTool.fontStrokeSize,
-        // },
-        // {
-        //   type: 'color',
-        //   title: 'textStrokeColor',
-        //   titleFull: 'textStrokeColorFull',
-        //   target: 'stroke',
-        //   action: () => {
-        //     this.colorPicker.open(this.colorWidgetState.stroke, (c) => {
-        //       this.textTool.setStrokeColor(c.alphaColor);
-        //     });
-        //   },
-        // },
-      ],
       activate: () => {
-        this.textTool.setFontColor(this.colorWidgetState.line.alphaColor);
-        // this.textTool.setStrokeColor(this.colorWidgetState.stroke.alphaColor);
         this.toolContainer.style.cursor = 'crosshair';
       },
       close: () => {
         this.textTool.close();
       },
-      eventListner: () => this.textTool,
+      eventListener: () => this.textTool,
     }, {
-      name: 'rotate',
+      name: 'rotateR',
       hotkey: 'r',
       activate: () => {
-        const w = this.size.w;
-        const h = this.size.h;
-        const tmpData = this.ctx.getImageData(0, 0, this.size.w, this.size.h);
-        const tmpCan = this.doc.createElement('canvas');
-        tmpCan.width = w;
-        tmpCan.height = h;
-        tmpCan.getContext('2d').putImageData(tmpData, 0, 0);
-        this.resize(h, w);
-        this.ctx.save();
-        this.ctx.translate(h / 2, w / 2);
-        this.ctx.rotate((90 * Math.PI) / 180);
-        this.ctx.drawImage(tmpCan, -w / 2, -h / 2);
-        this.adjustSizeFull();
-        this.ctx.restore();
+        this.rotate();
         this.worklog.captureState();
         this.closeActiveTool();
       },
@@ -297,20 +225,16 @@ class PainterroProc {
       name: 'rotateL',
       hotkey: 'e',
       activate: () => {
-        const w = this.size.w;
-        const h = this.size.h;
-        const tmpData = this.ctx.getImageData(0, 0, this.size.w, this.size.h);
-        const tmpCan = this.doc.createElement('canvas');
-        tmpCan.width = w;
-        tmpCan.height = h;
-        tmpCan.getContext('2d').putImageData(tmpData, 0, 0);
-        this.resize(h, w);
-        this.ctx.save();
-        this.ctx.translate(h / 2, w / 2);
-        this.ctx.rotate((90 * Math.PI) / 180);
-        this.ctx.drawImage(tmpCan, -w / 2, -h / 2);
-        this.adjustSizeFull();
-        this.ctx.restore();
+        this.rotate(false);
+        this.worklog.captureState();
+        this.closeActiveTool();
+      },
+    },{
+      name: 'rotate180',
+      hotkey: 'm',
+      activate: () => {
+        this.rotate();
+        this.rotate();
         this.worklog.captureState();
         this.closeActiveTool();
       },
@@ -322,7 +246,7 @@ class PainterroProc {
       close: () => {
         this.resizer.close();
       },
-      eventListner: () => this.resizer,
+      eventListener: () => this.resizer,
     },
     {
       name: 'undo',
@@ -330,7 +254,7 @@ class PainterroProc {
         this.worklog.undoState();
         this.closeActiveTool();
       },
-      eventListner: () => this.resizer,
+      eventListener: () => this.resizer,
     },
     {
       name: 'redo',
@@ -338,7 +262,7 @@ class PainterroProc {
         this.worklog.redoState();
         this.closeActiveTool();
       },
-      eventListner: () => this.resizer,
+      eventListener: () => this.resizer,
     },
     {
       name: 'settings',
@@ -348,7 +272,7 @@ class PainterroProc {
       close: () => {
         this.settings.close();
       },
-      eventListner: () => this.settings,
+      eventListener: () => this.settings,
     }, {
       name: 'save',
       right: true,
@@ -701,10 +625,10 @@ class PainterroProc {
   }
 
   handleToolEvent(eventHandler, event) {
-    if (this.activeTool && this.activeTool.eventListner) {
-      const listner = this.activeTool.eventListner();
-      if (listner[eventHandler]) {
-        return listner[eventHandler](event);
+    if (this.activeTool && this.activeTool.eventListener) {
+      const listener = this.activeTool.eventListener();
+      if (listener[eventHandler]) {
+        return listener[eventHandler](event);
       }
     }
     return false;
@@ -1086,6 +1010,23 @@ class PainterroProc {
     };
     this.canvas.setAttribute('width', this.size.w);
     this.canvas.setAttribute('height', this.size.h);
+  }
+
+  rotate(clockwise = true) {
+    const w = this.size.w;
+    const h = this.size.h;
+    const tmpData = this.ctx.getImageData(0, 0, this.size.w, this.size.h);
+    const tmpCan = this.doc.createElement('canvas');
+    tmpCan.width = w;
+    tmpCan.height = h;
+    tmpCan.getContext('2d').putImageData(tmpData, 0, 0);
+    this.resize(h, w);
+    this.ctx.save();
+    this.ctx.translate(h / 2, w / 2);
+    this.ctx.rotate((clockwise ? 1 : -1) * (90 * Math.PI) / 180);
+    this.ctx.drawImage(tmpCan, -w / 2, -h / 2);
+    this.adjustSizeFull();
+    this.ctx.restore();
   }
 
   syncToolElement() {

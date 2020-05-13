@@ -7,23 +7,31 @@ export default class Settings {
     this.main = main;
 
     this.wrapper = main.wrapper.querySelector('.ptro-settings-widget-wrapper');
-    this.inputPixelSize = main.wrapper.querySelector('.ptro-settings-widget-wrapper .ptro-pixel-size-input');
 
     this.applyButton = main.wrapper.querySelector('.ptro-settings-widget-wrapper button.ptro-apply');
     this.closeButton = main.wrapper.querySelector('.ptro-settings-widget-wrapper button.ptro-close');
-    this.clearButton = main.wrapper.querySelector('.ptro-settings-widget-wrapper button.ptro-clear');
-    this.bgSelBtn = main.wrapper.querySelector('.ptro-settings-widget-wrapper .ptro-color-btn');
+    this.lineColorSelBtn = main.wrapper.querySelector('.ptro-settings-widget-wrapper .ptro-color-btn[data-id="line"]');
+    this.lineWidthInput = main.wrapper.querySelector('.ptro-settings-widget-wrapper .ptro-line-width-input');
+    this.textFillColorSelBtn = main.wrapper.querySelector('.ptro-settings-widget-wrapper .ptro-color-btn[data-id="textFill"]');
+    this.fontColorSelBtn = main.wrapper.querySelector('.ptro-settings-widget-wrapper .ptro-color-btn[data-id="stroke"]');
+    this.fontSizeInput = main.wrapper.querySelector('.ptro-settings-widget-wrapper .ptro-font-size-input');
+    this.fontInput = main.wrapper.querySelector('.ptro-settings-widget-wrapper .ptro-font-input');
     this.errorHolder = main.wrapper.querySelector('.ptro-settings-widget-wrapper .ptro-error');
 
-    this.clearButton.onclick = () => {
-      this.main.currentBackground = this.main.colorWidgetState.bg.alphaColor;
-      this.main.currentBackgroundAlpha = this.main.colorWidgetState.bg.alpha;
-      this.main.clearBackground();
-      this.startClose();
+    this.lineWidthInput.innerHTML = this.main.params.availableLineWidths.map(x => `<option title="${x}">${x}</option>`);
+    this.fontSizeInput.innerHTML = this.main.params.availableFontSizes.map(x => `<option title="${x}">${x}</option>`);
+    this.fontInput.innerHTML = this.main.params.availableFonts.map(x => `<option title="${x}">${x}</option>`);
+
+    this.lineColorSelBtn.onclick = () => {
+      this.main.colorPicker.open(this.main.colorWidgetState.line);
     };
 
-    this.bgSelBtn.onclick = () => {
-      this.main.colorPicker.open(this.main.colorWidgetState.bg);
+    this.fontColorSelBtn.onclick = () => {
+      this.main.colorPicker.open(this.main.colorWidgetState.stroke);
+    };
+
+    this.textFillColorSelBtn.onclick = () => {
+      this.main.colorPicker.open(this.main.colorWidgetState.textFill);
     };
 
     this.closeButton.onclick = () => {
@@ -31,26 +39,32 @@ export default class Settings {
     };
 
     this.applyButton.onclick = () => {
-      let pixelVal = trim(this.inputPixelSize.value);
-      let valid;
-      if (pixelVal.slice(-1) === '%') {
-        const checkInt = trim(pixelVal.slice(0, -1));
-        valid = /^\d+$/.test(checkInt) && parseInt(checkInt, 10) !== 0;
-        if (valid) {
-          pixelVal = `${checkInt}%`;
-        }
-      } else {
-        valid = /^\d+$/.test(pixelVal) && parseInt(pixelVal, 10) !== 0;
-      }
-      if (valid) {
-        this.main.select.pixelizePixelSize = pixelVal;
-        setParam('pixelizePixelSize', pixelVal);
-        this.startClose();
-        this.errorHolder.setAttribute('hidden', '');
-      } else {
-        this.errorHolder.innerText = tr('wrongPixelSizeValue');
-        this.errorHolder.removeAttribute('hidden');
-      }
+      let lineWidthVal = trim(this.lineWidthInput.value);
+      let fontSize = trim(this.fontSizeInput.value);
+      let font = trim(this.fontInput.value);
+
+      // lineWidth
+      this.main.primitiveTool.setLineWidth(lineWidthVal);
+      setParam('defaultLineWidth', lineWidthVal);
+      // textColor
+      this.main.textTool.setFontColor(this.main.colorWidgetState.stroke.alphaColor);
+      setParam('textStrokeColor', this.main.colorWidgetState.stroke.palleteColor);
+      setParam('textStrokeColorAlpha', this.main.colorWidgetState.stroke.alpha);
+      setParam('textStrokeAlphaColor', this.main.colorWidgetState.stroke.alphaColor);
+      // textSize
+      this.main.textTool.setFontSize(fontSize);
+      setParam('defaultFontSize', fontSize);
+      // font
+      this.main.textTool.setFont(font);
+      setParam('font', font);
+      // textFill
+      this.main.textTool.setTextFillColor(this.main.colorWidgetState.textFill.alphaColor);
+      setParam('activeTextFillColor', this.main.colorWidgetState.textFill.palleteColor);
+      setParam('activeTextFillColorAlpha', this.main.colorWidgetState.textFill.alpha);
+      setParam('activeTextFillAlphaColor', this.main.colorWidgetState.textFill.alphaColor);
+
+      this.startClose();
+      this.errorHolder.setAttribute('hidden', '');
     };
   }
 
@@ -68,8 +82,11 @@ export default class Settings {
   open() {
     this.wrapper.removeAttribute('hidden');
     this.opened = true;
-    this.inputPixelSize.value = this.main.select.pixelizePixelSize;
-    this.bgSelBtn.style['background-color'] = this.main.colorWidgetState.bg.alphaColor;
+    this.lineWidthInput.value = this.main.primitiveTool.lineWidth;
+    this.fontSizeInput.value = this.main.textTool.fontSize;
+    this.lineColorSelBtn.style['background-color'] = this.main.colorWidgetState.line.alphaColor;
+    this.textFillColorSelBtn.style['background-color'] = this.main.colorWidgetState.textFill.alphaColor;
+    this.fontColorSelBtn.style['background-color'] = this.main.colorWidgetState.stroke.alphaColor;
   }
 
   close() {
@@ -88,20 +105,45 @@ export default class Settings {
         '<div class="ptro-settings-widget ptro-color-main ptro-v-middle-in">' +
             '<table style="margin-top: 5px">' +
               '<tr>' +
-                `<td class="ptro-label ptro-resize-table-left" style="height:30px;">${tr('backgroundColor')}</td>` +
+                `<td class="ptro-label ptro-resize-table-left" style="height:30px;">${tr('lineColorFull')}</td>` +
                 '<td class="ptro-strict-cell">' +
-                  '<button type="button" data-id="bg" class="ptro-color-btn ptro-bordered-btn" ' +
+                  '<button type="button" data-id="line" class="ptro-color-btn ptro-bordered-btn" ' +
                     'style="margin-top: -12px;"></button>' +
                   '<span class="ptro-btn-color-checkers"></span>' +
                 '</td>' +
-                '<td>' +
-                  `<button type="button" style="margin-top: -2px;" class="ptro-named-btn ptro-clear ptro-color-control" title="${tr('fillPageWith')}">${tr('clear')}</button>` +
+              '</tr>' +
+              '<tr>' +
+                `<td class="ptro-label ptro-resize-table-left" style="height:30px;">${tr('textFillColorFull')}</td>` +
+                '<td class="ptro-strict-cell">' +
+                  '<button type="button" data-id="textFill" class="ptro-color-btn ptro-bordered-btn" ' +
+                  'style="margin-top: -12px;"></button>' +
+                  '<span class="ptro-btn-color-checkers"></span>' +
                 '</td>' +
               '</tr>' +
               '<tr>' +
-                `<td class="ptro-label ptro-resize-table-left" >${tr('pixelizePixelSize')}</td>` +
-                '<td colspan="2">' +
-                  '<input class="ptro-input ptro-pixel-size-input" pattern="[0-9]{1,}%?" type="text" />' +
+                `<td class="ptro-label ptro-resize-table-left" style="height:30px;">${tr('lineWidthFull')}</td>` +
+                '<td class="ptro-strict-cell" colspan="2">' +
+                  '<select class="ptro-input ptro-line-width-input"></select>' +
+                '</td>' +
+              '</tr>' +
+              '<tr>' +
+                `<td class="ptro-label ptro-resize-table-left" style="height:30px;">${tr('fontNameFull')}</td>` +
+                '<td class="ptro-strict-cell" colspan="2">' +
+                  '<select class="ptro-input ptro-font-input"></select>' +
+                '</td>' +
+              '</tr>' +
+              '<tr>' +
+                `<td class="ptro-label ptro-resize-table-left" style="height:30px;">${tr('textColorFull')}</td>` +
+                '<td class="ptro-strict-cell">' +
+                  '<button type="button" data-id="stroke" class="ptro-color-btn ptro-bordered-btn" ' +
+                  'style="margin-top: -12px;"></button>' +
+                  '<span class="ptro-btn-color-checkers"></span>' +
+                '</td>' +
+              '</tr>' +
+              '<tr>' +
+                `<td class="ptro-label ptro-resize-table-left" style="height:30px;">${tr('textSizeFull')}</td>` +
+                '<td class="ptro-strict-cell" colspan="2">' +
+                  '<select class="ptro-input ptro-font-size-input"></select>' +
                 '</td>' +
               '</tr>' +
             '</table>' +

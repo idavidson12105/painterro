@@ -54,6 +54,11 @@ export function setDefaults(parameters) {
     params.activeFillColorAlpha, 0.0);
   params.activeFillAlphaColor = HexToRGBA(params.activeFillColor, params.activeFillColorAlpha);
 
+  params.activeTextFillColor = settings.activeTextFillColor || params.activeTextFillColor || '#ffff00';
+  params.activeTextFillColorAlpha = firstDefined(settings.activeTextFillColorAlpha,
+      params.activeTextFillColorAlpha, 1.0);
+  params.activeTextFillAlphaColor = HexToRGBA(params.activeTextFillColor, params.activeTextFillColorAlpha);
+
   params.initText = params.initText || null;
   params.initTextColor = params.initTextColor || '#808080';
   params.initTextStyle = params.initTextStyle || '26px \'Open Sans\', sans-serif';
@@ -74,6 +79,19 @@ export function setDefaults(parameters) {
   params.textStrokeColorAlpha = firstDefined(settings.textStrokeColorAlpha,
     params.textStrokeColorAlpha, 1.0);
   params.textStrokeAlphaColor = HexToRGBA(params.textStrokeColor, params.textStrokeColorAlpha);
+
+  params.availableFonts = [
+    'Arial, Helvetica, sans-serif',
+    '"Arial Black", Gadget, sans-serif',
+    '"Comic Sans MS", cursive, sans-serif',
+    'Impact, Charcoal, sans-serif',
+    '"Lucida Sans Unicode", "Lucida Grande", sans-serif',
+    'Tahoma, Geneva, sans-serif',
+    '"Trebuchet MS", Helvetica, sans-serif',
+    'Verdana, Geneva, sans-serif',
+    '"Courier New", Courier, monospace',
+    '"Lucida Console", Monaco, monospace',
+  ];
 
   params.worklogLimit = firstDefined(params.worklogLimit, 100);
 

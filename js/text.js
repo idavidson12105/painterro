@@ -13,8 +13,11 @@ export default class TextTool {
     this.inputWrapper.style.display = 'none';
     this.setFontSize(main.params.defaultFontSize);
     this.setFontStrokeSize(main.params.fontStrokeSize);
-    this.setFont(TextTool.getFonts()[0].value);
+    this.setFont(main.params.availableFonts[0]);
     this.setFontStyle(TextTool.getFontStyles()[0].value);
+    this.setFontColor(this.main.params.textStrokeAlphaColor);
+    this.setStrokeColor(this.main.params.textStrokeAlphaColor);
+    this.setTextFillColor(this.main.params.activeTextFillAlphaColor);
 
     this.el.querySelector('.ptro-text-tool-apply').onclick = () => {
       this.apply();
@@ -31,32 +34,6 @@ export default class TextTool {
 
   getFontStyle() {
     return this.fontStyle;
-  }
-
-  static getFonts() {
-    const fonts = [
-      'Arial, Helvetica, sans-serif',
-      '"Arial Black", Gadget, sans-serif',
-      '"Comic Sans MS", cursive, sans-serif',
-      'Impact, Charcoal, sans-serif',
-      '"Lucida Sans Unicode", "Lucida Grande", sans-serif',
-      'Tahoma, Geneva, sans-serif',
-      '"Trebuchet MS", Helvetica, sans-serif',
-      'Verdana, Geneva, sans-serif',
-      '"Courier New", Courier, monospace',
-      '"Lucida Console", Monaco, monospace',
-    ];
-
-    const res = [];
-    fonts.forEach((f) => {
-      res.push({
-        value: f,
-        name: f.split(',')[0].replace(/"/g, ''),
-        extraStyle: `font-family:${f}`,
-        title: f.split(',')[0].replace(/"/g, ''),
-      });
-    });
-    return res;
   }
 
   static getFontStyles() {
@@ -150,6 +127,11 @@ export default class TextTool {
   setStrokeColor(color) {
     this.strokeColor = color;
     this.input.style['-webkit-text-stroke'] = `${this.fontStrokeSize}px ${this.strokeColor}`;
+  }
+
+  setTextFillColor(color) {
+    this.textFillColor = color;
+    this.input.style['background'] = color;
   }
 
   inputLeft() {
