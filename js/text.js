@@ -17,7 +17,7 @@ export default class TextTool {
     this.setFontStyle(TextTool.getFontStyles()[0].value);
     this.setFontColor(this.main.params.textStrokeAlphaColor);
     this.setStrokeColor(this.main.params.textStrokeAlphaColor);
-    this.setTextFillColor(this.main.params.activeTextFillAlphaColor);
+    this.setNoteFillColor(this.main.params.activeNoteFillAlphaColor);
 
     this.el.querySelector('.ptro-text-tool-apply').onclick = () => {
       this.apply();
@@ -129,8 +129,8 @@ export default class TextTool {
     this.input.style['-webkit-text-stroke'] = `${this.fontStrokeSize}px ${this.strokeColor}`;
   }
 
-  setTextFillColor(color) {
-    this.textFillColor = color;
+  setNoteFillColor(color) {
+    this.noteFillColor = color;
     this.input.style['background'] = color;
   }
 

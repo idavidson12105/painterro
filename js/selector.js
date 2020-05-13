@@ -1,6 +1,6 @@
 import { clearSelection, KEYS } from './utils';
 
-export default class PainterroSelecter {
+export default class PainterroSelector {
   constructor(main, selectionCallback) {
     this.main = main;
     this.canvas = main.canvas;

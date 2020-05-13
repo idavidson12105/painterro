@@ -12,7 +12,7 @@ export default class Settings {
     this.closeButton = main.wrapper.querySelector('.ptro-settings-widget-wrapper button.ptro-close');
     this.lineColorSelBtn = main.wrapper.querySelector('.ptro-settings-widget-wrapper .ptro-color-btn[data-id="line"]');
     this.lineWidthInput = main.wrapper.querySelector('.ptro-settings-widget-wrapper .ptro-line-width-input');
-    this.textFillColorSelBtn = main.wrapper.querySelector('.ptro-settings-widget-wrapper .ptro-color-btn[data-id="textFill"]');
+    this.noteFillColorSelBtn = main.wrapper.querySelector('.ptro-settings-widget-wrapper .ptro-color-btn[data-id="noteFill"]');
     this.fontColorSelBtn = main.wrapper.querySelector('.ptro-settings-widget-wrapper .ptro-color-btn[data-id="stroke"]');
     this.fontSizeInput = main.wrapper.querySelector('.ptro-settings-widget-wrapper .ptro-font-size-input');
     this.fontInput = main.wrapper.querySelector('.ptro-settings-widget-wrapper .ptro-font-input');
@@ -30,8 +30,8 @@ export default class Settings {
       this.main.colorPicker.open(this.main.colorWidgetState.stroke);
     };
 
-    this.textFillColorSelBtn.onclick = () => {
-      this.main.colorPicker.open(this.main.colorWidgetState.textFill);
+    this.noteFillColorSelBtn.onclick = () => {
+      this.main.colorPicker.open(this.main.colorWidgetState.noteFill);
     };
 
     this.closeButton.onclick = () => {
@@ -57,11 +57,11 @@ export default class Settings {
       // font
       this.main.textTool.setFont(font);
       setParam('font', font);
-      // textFill
-      this.main.textTool.setTextFillColor(this.main.colorWidgetState.textFill.alphaColor);
-      setParam('activeTextFillColor', this.main.colorWidgetState.textFill.palleteColor);
-      setParam('activeTextFillColorAlpha', this.main.colorWidgetState.textFill.alpha);
-      setParam('activeTextFillAlphaColor', this.main.colorWidgetState.textFill.alphaColor);
+      // noteFill
+      this.main.textTool.setNoteFillColor(this.main.colorWidgetState.noteFill.alphaColor);
+      setParam('activeNoteFillColor', this.main.colorWidgetState.noteFill.palleteColor);
+      setParam('activeNoteFillColorAlpha', this.main.colorWidgetState.noteFill.alpha);
+      setParam('activeNoteFillAlphaColor', this.main.colorWidgetState.noteFill.alphaColor);
 
       this.startClose();
       this.errorHolder.setAttribute('hidden', '');
@@ -85,7 +85,7 @@ export default class Settings {
     this.lineWidthInput.value = this.main.primitiveTool.lineWidth;
     this.fontSizeInput.value = this.main.textTool.fontSize;
     this.lineColorSelBtn.style['background-color'] = this.main.colorWidgetState.line.alphaColor;
-    this.textFillColorSelBtn.style['background-color'] = this.main.colorWidgetState.textFill.alphaColor;
+    this.noteFillColorSelBtn.style['background-color'] = this.main.colorWidgetState.noteFill.alphaColor;
     this.fontColorSelBtn.style['background-color'] = this.main.colorWidgetState.stroke.alphaColor;
   }
 
@@ -113,9 +113,9 @@ export default class Settings {
                 '</td>' +
               '</tr>' +
               '<tr>' +
-                `<td class="ptro-label ptro-resize-table-left" style="height:30px;">${tr('textFillColorFull')}</td>` +
+                `<td class="ptro-label ptro-resize-table-left" style="height:30px;">${tr('noteFillColorFull')}</td>` +
                 '<td class="ptro-strict-cell">' +
-                  '<button type="button" data-id="textFill" class="ptro-color-btn ptro-bordered-btn" ' +
+                  '<button type="button" data-id="noteFill" class="ptro-color-btn ptro-bordered-btn" ' +
                   'style="margin-top: -12px;"></button>' +
                   '<span class="ptro-btn-color-checkers"></span>' +
                 '</td>' +

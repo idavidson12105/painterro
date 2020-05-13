@@ -4,7 +4,7 @@ import '../css/styles.css';
 import '../css/bar-styles.css';
 import '../css/icons/ptroiconfont.css';
 
-import PainterroSelecter from './selecter';
+import PainterroSelector from './selector';
 import WorkLog from './worklog';
 import { genId, addDocumentObjectHelpers, KEYS, trim,
   getScrollbarWidth, distance } from './utils';
@@ -17,7 +17,6 @@ import TextTool from './text';
 import Resizer from './resizer';
 import Inserter from './inserter';
 import Settings from './settings';
-import ControlBuilder from './controlbuilder';
 
 require('es6-promise').polyfill();
 require('string.prototype.repeat');
@@ -26,7 +25,6 @@ class PainterroProc {
   constructor(params) {
     addDocumentObjectHelpers();
     this.params = setDefaults(params);
-    this.controlBuilder = new ControlBuilder(this);
     this.colorWidgetState = {
       line: {
         target: 'line',
@@ -40,11 +38,11 @@ class PainterroProc {
         alpha: this.params.activeFillColorAlpha,
         alphaColor: this.params.activeFillAlphaColor,
       },
-      textFill: {
-        target: 'textFill',
-        palleteColor: this.params.activeTextFillColor,
-        alpha: this.params.activeTextFillColorAlpha,
-        alphaColor: this.params.activeTextFillAlphaColor,
+      noteFill: {
+        target: 'noteFill',
+        palleteColor: this.params.activeNoteFillColor,
+        alpha: this.params.activeNoteFillColorAlpha,
+        alphaColor: this.params.activeNoteFillAlphaColor,
       },
       bg: {
         target: 'bg',
@@ -92,16 +90,6 @@ class PainterroProc {
     }, {
       name: 'line',
       hotkey: 'l',
-      controls: [{
-        type: 'color',
-        title: 'lineColor',
-        target: 'line',
-        titleFull: 'lineColorFull',
-        action: () => {
-          this.colorPicker.open(this.colorWidgetState.line);
-        },
-      }, this.controlBuilder.buildLineWidthControl(1),
-      ],
       activate: () => {
         this.toolContainer.style.cursor = 'crosshair';
         this.primitiveTool.activate('line');
@@ -110,17 +98,6 @@ class PainterroProc {
     }, {
       name: 'arrow',
       hotkey: 'a',
-      controls: [{
-        type: 'color',
-        title: 'lineColor',
-        target: 'line',
-        titleFull: 'lineColorFull',
-        action: () => {
-          this.colorPicker.open(this.colorWidgetState.line);
-        },
-      }, this.controlBuilder.buildLineWidthControl(1),
-      this.controlBuilder.buildArrowLengthControl(2),
-      ],
       activate: () => {
         this.toolContainer.style.cursor = 'crosshair';
         this.primitiveTool.activate('arrow');
@@ -128,24 +105,6 @@ class PainterroProc {
       eventListener: () => this.primitiveTool,
     }, {
       name: 'rect',
-      controls: [{
-        type: 'color',
-        title: 'lineColor',
-        titleFull: 'lineColorFull',
-        target: 'line',
-        action: () => {
-          this.colorPicker.open(this.colorWidgetState.line);
-        },
-      }, {
-        type: 'color',
-        title: 'fillColor',
-        titleFull: 'fillColorFull',
-        target: 'fill',
-        action: () => {
-          this.colorPicker.open(this.colorWidgetState.fill);
-        },
-      }, this.controlBuilder.buildLineWidthControl(2),
-      ],
       activate: () => {
         this.toolContainer.style.cursor = 'crosshair';
         this.primitiveTool.activate('rect');
@@ -153,24 +112,6 @@ class PainterroProc {
       eventListener: () => this.primitiveTool,
     }, {
       name: 'ellipse',
-      controls: [{
-        type: 'color',
-        title: 'lineColor',
-        titleFull: 'lineColorFull',
-        target: 'line',
-        action: () => {
-          this.colorPicker.open(this.colorWidgetState.line);
-        },
-      }, {
-        type: 'color',
-        title: 'fillColor',
-        titleFull: 'fillColorFull',
-        target: 'fill',
-        action: () => {
-          this.colorPicker.open(this.colorWidgetState.fill);
-        },
-      }, this.controlBuilder.buildLineWidthControl(2),
-      ],
       activate: () => {
         this.toolContainer.style.cursor = 'crosshair';
         this.primitiveTool.activate('ellipse');
@@ -179,16 +120,6 @@ class PainterroProc {
     }, {
       name: 'brush',
       hotkey: 'b',
-      controls: [{
-        type: 'color',
-        title: 'lineColor',
-        target: 'line',
-        titleFull: 'lineColorFull',
-        action: () => {
-          this.colorPicker.open(this.colorWidgetState.line);
-        },
-      }, this.controlBuilder.buildLineWidthControl(1),
-      ],
       activate: () => {
         this.toolContainer.style.cursor = 'crosshair';
         this.primitiveTool.activate('brush');
@@ -196,8 +127,6 @@ class PainterroProc {
       eventListener: () => this.primitiveTool,
     }, {
       name: 'eraser',
-      controls: [this.controlBuilder.buildEraserWidthControl(0),
-      ],
       activate: () => {
         this.toolContainer.style.cursor = 'crosshair';
         this.primitiveTool.activate('eraser');
@@ -365,7 +294,7 @@ class PainterroProc {
     this.inserter = Inserter.get();
 
     const cropper = '<div class="ptro-crp-el">' +
-      `${PainterroSelecter.code()}${TextTool.code()}</div>`;
+      `${PainterroSelector.code()}${TextTool.code()}</div>`;
 
     this.loadedName = '';
     this.doc = document;
@@ -393,7 +322,6 @@ class PainterroProc {
     this.bar.className = 'ptro-bar ptro-color-main';
     this.bar.innerHTML =
       `<div><span>${bar}</span>` +
-      '<span class="tool-controls"></span>' +
       `<span class="ptro-bar-right">${rightBar}</span>` +
       '<span class="ptro-info"></span>' +
       '<input id="ptro-file-input" type="file" style="display: none;" accept="image/x-png,image/png,image/gif,image/jpeg" /></div>';
@@ -420,11 +348,10 @@ class PainterroProc {
     this.info = this.doc.querySelector(`#${this.id}-bar .ptro-info`);
     this.canvas = this.doc.querySelector(`#${this.id}-canvas`);
     this.ctx = this.canvas.getContext('2d');
-    this.toolControls = this.doc.querySelector(`#${this.id}-bar .tool-controls`);
     this.toolContainer = this.doc.querySelector(`#${this.id}-wrapper .ptro-crp-el`);
     this.substrate = this.doc.querySelector(`#${this.id}-wrapper .ptro-substrate`);
     this.zoomHelper = new ZoomHelper(this);
-    this.select = new PainterroSelecter(this, (notEmpty) => {
+    this.select = new PainterroSelector(this, (notEmpty) => {
       [this.toolByName.crop, this.toolByName.pixelize].forEach((c) => {
         this.setToolEnabled(c, notEmpty);
       });
@@ -611,7 +538,6 @@ class PainterroProc {
       if (this.activeTool.close !== undefined) {
         this.activeTool.close();
       }
-      this.toolControls.innerHTML = '';
       const btnEl = this.getBtnEl(this.activeTool);
       if (btnEl) {
         btnEl.className =
@@ -1096,46 +1022,6 @@ class PainterroProc {
     if (btnEl) {
       btnEl.className += ' ptro-color-active-control';
     }
-    let ctrls = '';
-    (b.controls || []).forEach((ctl) => {
-      ctl.id = genId();
-      if (ctl.title) {
-        ctrls += `<span class="ptro-tool-ctl-name" title="${tr(ctl.titleFull)}">${tr(ctl.title)}</span>`;
-      }
-      if (ctl.type === 'btn') {
-        ctrls += `<button type="button" ${ctl.hint ? `title="${tr(ctl.hint)}"` : ''} class="ptro-color-control ${ctl.icon ? 'ptro-icon-btn' : 'ptro-named-btn'}" ` +
-          `id=${ctl.id}>${ctl.icon ? `<i class="ptro-icon ptro-icon-${ctl.icon}"></i>` : ''}` +
-          `<p>${ctl.name || ''}</p></button>`;
-      } else if (ctl.type === 'color') {
-        ctrls += `<button type="button" id=${ctl.id} data-id='${ctl.target}' ` +
-          `style="background-color: ${this.colorWidgetState[ctl.target].alphaColor}" ` +
-          'class="color-diwget-btn ptro-color-btn ptro-bordered-btn"></button>' +
-          '<span class="ptro-btn-color-checkers-bar"></span>';
-      } else if (ctl.type === 'int') {
-        ctrls += `<input id=${ctl.id} class="ptro-input" type="number" min="${ctl.min}" max="${ctl.max}" ` +
-          `data-id='${ctl.target}'/>`;
-      } else if (ctl.type === 'dropdown') {
-        let options = '';
-        ctl.getAvailableValues().forEach((o) => {
-          options += `<option ${o.extraStyle ? `style='${o.extraStyle}'` : ''}` +
-            ` value='${o.value}' ${o.title ? `title='${o.title}'` : ''}>${o.name}</option>`;
-        });
-        ctrls += `<select id=${ctl.id} class="ptro-input" ` +
-          `data-id='${ctl.target}'>${options}</select>`;
-      }
-    });
-    this.toolControls.innerHTML = ctrls;
-    (b.controls || []).forEach((ctl) => {
-      if (ctl.type === 'int') {
-        this.doc.getElementById(ctl.id).value = ctl.getValue();
-        this.doc.getElementById(ctl.id).oninput = ctl.action;
-      } else if (ctl.type === 'dropdown') {
-        this.doc.getElementById(ctl.id).onchange = ctl.action;
-        this.doc.getElementById(ctl.id).value = ctl.getValue();
-      } else {
-        this.doc.getElementById(ctl.id).onclick = ctl.action;
-      }
-    });
     b.activate();
   }
 }

@@ -54,10 +54,10 @@ export function setDefaults(parameters) {
     params.activeFillColorAlpha, 0.0);
   params.activeFillAlphaColor = HexToRGBA(params.activeFillColor, params.activeFillColorAlpha);
 
-  params.activeTextFillColor = settings.activeTextFillColor || params.activeTextFillColor || '#ffff00';
-  params.activeTextFillColorAlpha = firstDefined(settings.activeTextFillColorAlpha,
-      params.activeTextFillColorAlpha, 1.0);
-  params.activeTextFillAlphaColor = HexToRGBA(params.activeTextFillColor, params.activeTextFillColorAlpha);
+  params.activeNoteFillColor = settings.activeNoteFillColor || params.activeNoteFillColor || '#ffff00';
+  params.activeNoteFillColorAlpha = firstDefined(settings.activeNoteFillColorAlpha,
+      params.activeNoteFillColorAlpha, 1.0);
+  params.activeNoteFillAlphaColor = HexToRGBA(params.activeNoteFillColor, params.activeNoteFillColorAlpha);
 
   params.initText = params.initText || null;
   params.initTextColor = params.initTextColor || '#808080';
