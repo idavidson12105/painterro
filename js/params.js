@@ -80,6 +80,10 @@ export function setDefaults(parameters) {
     params.textStrokeColorAlpha, 1.0);
   params.textStrokeAlphaColor = HexToRGBA(params.textStrokeColor, params.textStrokeColorAlpha);
 
+  params.availableLineWidths = [1, 2, 4, 8, 16];
+
+  params.availableFontSizes = [1, 2, 4, 8, 16];
+
   params.availableFonts = [
     'Arial, Helvetica, sans-serif',
     '"Arial Black", Gadget, sans-serif',

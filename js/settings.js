@@ -18,9 +18,9 @@ export default class Settings {
     this.fontInput = main.wrapper.querySelector('.ptro-settings-widget-wrapper .ptro-font-input');
     this.errorHolder = main.wrapper.querySelector('.ptro-settings-widget-wrapper .ptro-error');
 
-    this.lineWidthInput.innerHTML = this.main.params.availableLineWidths.map(x => `<option title="${x}">${x}</option>`);
-    this.fontSizeInput.innerHTML = this.main.params.availableFontSizes.map(x => `<option title="${x}">${x}</option>`);
-    this.fontInput.innerHTML = this.main.params.availableFonts.map(x => `<option title="${x}">${x}</option>`);
+    this.lineWidthInput.innerHTML = this.main.params.availableLineWidths.map(x => `<option title="${x}">${x}</option>`).toString();
+    this.fontSizeInput.innerHTML = this.main.params.availableFontSizes.map(x => `<option title="${x}">${x}</option>`).toString();
+    this.fontInput.innerHTML = this.main.params.availableFonts.map(x => `<option title="${x}">${x}</option>`).toString();
 
     this.lineColorSelBtn.onclick = () => {
       this.main.colorPicker.open(this.main.colorWidgetState.line);
