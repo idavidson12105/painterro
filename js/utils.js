@@ -92,6 +92,7 @@ export const KEYS = {
   e: 69,
   t: 84,
   m: 77,
+  n: 78,
   enter: 13,
   esc: 27,
   del: 46,

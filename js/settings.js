@@ -48,17 +48,20 @@ export default class Settings {
       setParam('defaultLineWidth', lineWidthVal);
       // textColor
       this.main.textTool.setFontColor(this.main.colorWidgetState.stroke.alphaColor);
+      this.main.notesTool.setFontColor(this.main.colorWidgetState.stroke.alphaColor);
       setParam('textStrokeColor', this.main.colorWidgetState.stroke.palleteColor);
       setParam('textStrokeColorAlpha', this.main.colorWidgetState.stroke.alpha);
       setParam('textStrokeAlphaColor', this.main.colorWidgetState.stroke.alphaColor);
       // textSize
       this.main.textTool.setFontSize(fontSize);
+      this.main.notesTool.setFontSize(fontSize);
       setParam('defaultFontSize', fontSize);
       // font
       this.main.textTool.setFont(font);
+      this.main.notesTool.setFont(font);
       setParam('font', font);
       // noteFill
-      this.main.textTool.setNoteFillColor(this.main.colorWidgetState.noteFill.alphaColor);
+      this.main.notesTool.setFillColor(this.main.colorWidgetState.noteFill.alphaColor);
       setParam('activeNoteFillColor', this.main.colorWidgetState.noteFill.palleteColor);
       setParam('activeNoteFillColorAlpha', this.main.colorWidgetState.noteFill.alpha);
       setParam('activeNoteFillAlphaColor', this.main.colorWidgetState.noteFill.alphaColor);

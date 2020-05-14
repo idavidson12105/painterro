@@ -50,6 +50,8 @@ export default {
         save: 'שמירה',
         load: 'Load image',
         text: 'תיבת טקסט',
+        note: 'הערה',
+        toggleNotes: 'הצג/הסתר הערות',
         brush: 'מברשת',
         resize: 'Resize or scale',
         open: 'Open image',

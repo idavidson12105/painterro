@@ -427,7 +427,7 @@ select.ptro-input {
     display: none;
 }
 
-.ptro-text-tool-input {
+.ptro-text-tool-input, .ptro-notes-tool-input {
     background-color: rgba(0,0,0,0);
     outline: 1px dotted;
     width: auto;
@@ -442,11 +442,11 @@ select.ptro-input {
     text-align: left;
 }
 
-.ptro-text-tool-buttons {
+.ptro-text-tool-buttons, .ptro-notes-tool-buttons {
     display: block;
 }
 
-.ptro-text-tool-input-wrapper {
+.ptro-text-tool-input-wrapper, .ptro-notes-tool-input-wrapper {
     position: absolute;
 }
 
@@ -584,4 +584,12 @@ i.mce-i-painterro:before, span.mce_painterro:before {
 td.ptro-strict-cell {
     font-size: 8px;
     line-height: normal;
+}
+
+#notes-canvas {
+    position: absolute;
+    /*left: 0;*/
+    /*top: 0;*/
+    pointer-events: none;
+    z-index: 10;
 }

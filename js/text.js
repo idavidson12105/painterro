@@ -3,13 +3,14 @@ import { KEYS, checkIn } from './utils';
 import { tr } from './translation';
 
 export default class TextTool {
-  constructor(main) {
-    this.ctx = main.ctx;
+  constructor(main, ctx, name) {
+    this.name = name;
+    this.ctx = ctx;
     this.el = main.toolContainer;
     this.main = main;
     this.wrapper = main.wrapper;
-    this.input = this.el.querySelector('.ptro-text-tool-input');
-    this.inputWrapper = this.el.querySelector('.ptro-text-tool-input-wrapper');
+    this.input = this.el.querySelector(`.ptro-${name}-tool-input`);
+    this.inputWrapper = this.el.querySelector(`.ptro-${name}-tool-input-wrapper`);
     this.inputWrapper.style.display = 'none';
     this.setFontSize(main.params.defaultFontSize);
     this.setFontStrokeSize(main.params.fontStrokeSize);
@@ -17,13 +18,17 @@ export default class TextTool {
     this.setFontStyle(TextTool.getFontStyles()[0].value);
     this.setFontColor(this.main.params.textStrokeAlphaColor);
     this.setStrokeColor(this.main.params.textStrokeAlphaColor);
-    this.setNoteFillColor(this.main.params.activeNoteFillAlphaColor);
 
-    this.el.querySelector('.ptro-text-tool-apply').onclick = () => {
+    if (this.name === 'text')
+      this.setFillColor('transparent');
+    else
+      this.setFillColor(this.main.params.activeNoteFillAlphaColor);
+
+    this.el.querySelector(`.ptro-${name}-tool-apply`).onclick = () => {
       this.apply();
     };
 
-    this.el.querySelector('.ptro-text-tool-cancel').onclick = () => {
+    this.el.querySelector(`.ptro-${name}-tool-cancel`).onclick = () => {
       this.close();
     };
   }
@@ -129,8 +134,8 @@ export default class TextTool {
     this.input.style['-webkit-text-stroke'] = `${this.fontStrokeSize}px ${this.strokeColor}`;
   }
 
-  setNoteFillColor(color) {
-    this.noteFillColor = color;
+  setFillColor(color) {
+    this.fillColor = color;
     this.input.style['background'] = color;
   }
 
@@ -224,19 +229,19 @@ export default class TextTool {
     this.inputWrapper.style.display = 'none';
   }
 
-  static code() {
-    return '<span class="ptro-text-tool-input-wrapper">' +
-      '<div contenteditable="true" class="ptro-text-tool-input"></div>' +
-        '<span class="ptro-text-tool-buttons">' +
-          `<button type="button" class="ptro-text-tool-apply ptro-icon-btn ptro-color-control" title="${tr('apply')}" 
+  static code(name) {
+    return `<span class="ptro-${name}-tool-input-wrapper">` +
+      `<div contenteditable="true" class="ptro-${name}-tool-input"></div>` +
+        `<span class="ptro-${name}-tool-buttons">` +
+          `<button type="button" class="ptro-${name}-tool-apply ptro-icon-btn ptro-color-control" title="${tr('apply')}" 
                    style="margin: 2px">` +
-            '<i class="ptro-icon ptro-icon-apply"></i>' +
-          '</button>' +
-          `<button type="button" class="ptro-text-tool-cancel ptro-icon-btn ptro-color-control" title="${tr('cancel')}"
+            `<i class="ptro-icon ptro-icon-apply"></i>` +
+          `</button>` +
+          `<button type="button" class="ptro-${name}-tool-cancel ptro-icon-btn ptro-color-control" title="${tr('cancel')}"
                    style="margin: 2px">` +
-            '<i class="ptro-icon ptro-icon-close"></i>' +
-          '</button>' +
-        '</span>' +
-      '</span>';
+            `<i class="ptro-icon ptro-icon-close"></i>` +
+          `</button>` +
+        `</span>` +
+      `</span>`;
   }
 }

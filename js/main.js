@@ -132,6 +132,24 @@ class PainterroProc {
       },
       eventListener: () => this.primitiveTool,
     }, {
+      name: 'toggleNotes',
+      hotkey: '',
+      activate: () => {
+        this.notesCanvas.style.display === 'none' ?
+            this.notesCanvas.style.display = 'initial' : this.notesCanvas.style.display = 'none';
+        this.closeActiveTool();
+      }
+    }, {
+      name: 'note',
+      hotkey: 'n',
+      activate: () => {
+        this.toolContainer.style.cursor = 'crosshair';
+      },
+      close: () => {
+        this.notesTool.close();
+      },
+      eventListener: () => this.notesTool,
+    }, {
       name: 'text',
       hotkey: 't',
       activate: () => {
@@ -293,7 +311,7 @@ class PainterroProc {
     this.inserter = Inserter.get();
 
     const cropper = '<div class="ptro-crp-el">' +
-      `${PainterroSelector.code()}${TextTool.code()}</div>`;
+      `${PainterroSelector.code()}${TextTool.code('text')}${TextTool.code('notes')}</div>`;
 
     this.loadedName = '';
     this.doc = document;
@@ -304,6 +322,7 @@ class PainterroProc {
       '<div class="ptro-scroller">' +
         '<div class="ptro-center-table">' +
           '<div class="ptro-center-tablecell">' +
+            `<canvas id="notes-canvas"></canvas>` +
             `<canvas id="${this.id}-canvas"></canvas>` +
             `<div class="ptro-substrate"></div>${cropper}` +
           '</div>' +
@@ -329,14 +348,8 @@ class PainterroProc {
 
     this.baseEl.appendChild(this.bar);
     const style = this.doc.createElement('style');
-    style.type = 'text/css';
     style.innerHTML = this.params.styles;
     this.baseEl.appendChild(style);
-
-    // this.baseEl.innerHTML = '<iframe class="ptro-iframe"></iframe>';
-    // this.iframe = this.baseEl.getElementsByTagName('iframe')[0];
-    // this.doc = this.iframe.contentDocument || this.iframe.contentWindow.document;
-    // this.doc.body.innerHTML = html;
 
     this.saveBtn = this.doc.getElementById(this.toolByName.save.buttonId);
     if (this.saveBtn) {
@@ -344,7 +357,9 @@ class PainterroProc {
     }
     this.body = this.doc.body;
     this.canvas = this.doc.querySelector(`#${this.id}-canvas`);
+    this.notesCanvas = this.doc.querySelector(`#notes-canvas`);
     this.ctx = this.canvas.getContext('2d');
+    this.notesCtx = this.notesCanvas.getContext('2d');
     this.toolContainer = this.doc.querySelector(`#${this.id}-wrapper .ptro-crp-el`);
     this.substrate = this.doc.querySelector(`#${this.id}-wrapper .ptro-substrate`);
     this.zoomHelper = new ZoomHelper(this);
@@ -377,7 +392,8 @@ class PainterroProc {
       }
     });
     this.inserter.init(this);
-    this.textTool = new TextTool(this);
+    this.textTool = new TextTool(this, this.ctx, 'text');
+    this.notesTool = new TextTool(this, this.notesCtx, 'notes');
     this.colorPicker = new ColorPicker(this, (widgetState) => {
       this.colorWidgetState[widgetState.target] = widgetState;
       this.doc.querySelector(
@@ -482,7 +498,13 @@ class PainterroProc {
     if (realQuality === undefined) {
       realQuality = 0.92;
     }
-    return this.canvas.toDataURL(type, realQuality);
+    const tmpCan = this.doc.createElement('canvas');
+    tmpCan.width = this.size.w;
+    tmpCan.height = this.size.h;
+    const tmpCtx = tmpCan.getContext('2d');
+    tmpCtx.drawImage(this.canvas, 0, 0);
+    tmpCtx.drawImage(this.notesCanvas, 0, 0);
+    return tmpCan.toDataURL(type, realQuality);
   }
 
   getBtnEl(tool) {
@@ -903,21 +925,29 @@ class PainterroProc {
         if (newRelation) {
           this.canvas.style.width = `${this.wrapper.clientWidth}px`;
           this.canvas.style.height = 'auto';
+          this.notesCanvas.style.width = `${this.wrapper.clientWidth}px`;
+          this.notesCanvas.style.height = 'auto';
         } else {
           this.canvas.style.width = 'auto';
           this.canvas.style.height = `${this.wrapper.clientHeight}px`;
+          this.notesCanvas.style.width = 'auto';
+          this.notesCanvas.style.height = `${this.wrapper.clientHeight}px`;
         }
         this.scroller.style.overflow = 'hidden';
       } else {
         this.scroller.style.overflow = 'hidden';
         this.canvas.style.width = 'auto';
         this.canvas.style.height = 'auto';
+        this.notesCanvas.style.width = 'auto';
+        this.notesCanvas.style.height = 'auto';
         this.ratioRelation = 0;
       }
     } else {
       this.scroller.style.overflow = 'scroll';
       this.canvas.style.width = `${this.size.w * this.zoomFactor}px`;
       this.canvas.style.height = `${this.size.h * this.zoomFactor}px`;
+      this.notesCanvas.style.width = `${this.size.w * this.zoomFactor}px`;
+      this.notesCanvas.style.height = `${this.size.h * this.zoomFactor}px`;
       this.ratioRelation = 0;
     }
     this.syncToolElement();
@@ -932,23 +962,35 @@ class PainterroProc {
     };
     this.canvas.setAttribute('width', this.size.w);
     this.canvas.setAttribute('height', this.size.h);
+    this.notesCanvas.setAttribute('width', this.size.w);
+    this.notesCanvas.setAttribute('height', this.size.h);
   }
 
   rotate(clockwise = true) {
     const w = this.size.w;
     const h = this.size.h;
     const tmpData = this.ctx.getImageData(0, 0, this.size.w, this.size.h);
+    const tmpNotesData = this.notesCtx.getImageData(0, 0, this.size.w, this.size.h);
     const tmpCan = this.doc.createElement('canvas');
+    const tmpNotesCan = this.doc.createElement('canvas');
     tmpCan.width = w;
     tmpCan.height = h;
     tmpCan.getContext('2d').putImageData(tmpData, 0, 0);
+    tmpNotesCan.width = w;
+    tmpNotesCan.height = h;
+    tmpNotesCan.getContext('2d').putImageData(tmpNotesData, 0, 0);
     this.resize(h, w);
     this.ctx.save();
     this.ctx.translate(h / 2, w / 2);
     this.ctx.rotate((clockwise ? 1 : -1) * (90 * Math.PI) / 180);
     this.ctx.drawImage(tmpCan, -w / 2, -h / 2);
+    this.notesCtx.save();
+    this.notesCtx.translate(h / 2, w / 2);
+    this.notesCtx.rotate((clockwise ? 1 : -1) * (90 * Math.PI) / 180);
+    this.notesCtx.drawImage(tmpNotesCan, -w / 2, -h / 2);
     this.adjustSizeFull();
     this.ctx.restore();
+    this.notesCtx.restore();
   }
 
   syncToolElement() {

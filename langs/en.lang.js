@@ -58,6 +58,8 @@ export default {
     save: 'Save image',
     load: 'Load image',
     text: 'Put text',
+    note: 'Put note',
+    toggleNote: 'Show/hide notes',
     brush: 'Brush',
     resize: 'Resize or scale',
     open: 'Open image',
