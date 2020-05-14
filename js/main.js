@@ -323,7 +323,6 @@ class PainterroProc {
     this.bar.innerHTML =
       `<div><span>${bar}</span>` +
       `<span class="ptro-bar-right">${rightBar}</span>` +
-      '<span class="ptro-info"></span>' +
       '<input id="ptro-file-input" type="file" style="display: none;" accept="image/x-png,image/png,image/gif,image/jpeg" /></div>';
     if (this.isMobile) {
       this.bar.style['overflow-x'] = 'auto';
@@ -345,7 +344,6 @@ class PainterroProc {
       this.saveBtn.setAttribute('disabled', 'true');
     }
     this.body = this.doc.body;
-    this.info = this.doc.querySelector(`#${this.id}-bar .ptro-info`);
     this.canvas = this.doc.querySelector(`#${this.id}-canvas`);
     this.ctx = this.canvas.getContext('2d');
     this.toolContainer = this.doc.querySelector(`#${this.id}-wrapper .ptro-crp-el`);
@@ -928,7 +926,6 @@ class PainterroProc {
   }
 
   resize(x, y) {
-    this.info.innerHTML = `${x} x ${y}`;
     this.size = {
       w: x,
       h: y,

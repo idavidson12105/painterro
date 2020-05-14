@@ -71,7 +71,7 @@ export function setDefaults(parameters) {
   params.fontStrokeSize = firstDefined(settings.fontStrokeSize, params.fontStrokeSize, 0);
   params.backgroundFillColor = settings.backgroundFillColor || params.backgroundFillColor || '#ffffff';
   params.backgroundFillColorAlpha = firstDefined(settings.backgroundFillColorAlpha,
-    params.backgroundFillColorAlpha, 1.0);
+    params.backgroundFillColorAlpha, 0.0);
   params.backgroundFillAlphaColor = HexToRGBA(params.backgroundFillColor,
     params.backgroundFillColorAlpha);
 
@@ -146,7 +146,6 @@ export function setDefaults(parameters) {
     }
   }
 
-  params.toolbarPosition = params.toolbarPosition || 'bottom';
   params.fixMobilePageReloader = params.fixMobilePageReloader !== undefined ?
     params.fixMobilePageReloader : true;
   if (params.translation) {
@@ -186,11 +185,6 @@ export function setDefaults(parameters) {
         color:${params.colorScheme.activeControlContent}}
     .ptro-wrapper{
       background-color:${params.colorScheme.backgroundColor};
-      bottom:${params.toolbarPosition === 'top' ? '0' : '40px'};
-      top:${params.toolbarPosition === 'top' ? '40px' : '0'};
-    }
-    .ptro-bar {
-      ${params.toolbarPosition === 'top' ? 'top' : 'bottom'}: 0;
     }`;
 
   return params;
