@@ -19,7 +19,6 @@ import Inserter from './inserter';
 import Settings from './settings';
 
 require('es6-promise').polyfill();
-require('string.prototype.repeat');
 
 class PainterroProc {
   constructor(params) {
