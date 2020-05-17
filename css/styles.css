@@ -417,6 +417,7 @@ select.ptro-input {
     max-width: 130px;
     height: 32px;
     font-size: 14px;
+    text-align-last: justify;
 }
 
 .ptro-named-btn p {
