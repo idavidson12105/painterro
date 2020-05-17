@@ -1,6 +1,7 @@
 import { tr } from './translation';
 import { trim, KEYS } from './utils';
 import { setParam } from './params';
+import text from "./text";
 
 export default class Settings {
   constructor(main) {
@@ -102,50 +103,49 @@ export default class Settings {
     this.main.closeActiveTool();
   }
 
-  static html() {
+  static html(main) {
+    const direction = main.params.language === 'he' ? 'rtl' : 'ltr',
+        textAlign = main.params.language === 'he' ? 'right' : 'left';
     return '' +
       '<div class="ptro-settings-widget-wrapper ptro-common-widget-wrapper ptro-v-middle" hidden>' +
         '<div class="ptro-settings-widget ptro-color-main ptro-v-middle-in">' +
-            '<table style="margin-top: 5px">' +
+            `<table style="width: 100%; direction: ${direction}; text-align: ${textAlign}">` +
               '<tr>' +
-                `<td class="ptro-label ptro-resize-table-left" style="height:30px;">${tr('lineColorFull')}</td>` +
+                `<td class="ptro-label ptro-resize-table-left">${tr('lineColorFull')}</td>` +
                 '<td class="ptro-strict-cell">' +
-                  '<button type="button" data-id="line" class="ptro-color-btn ptro-bordered-btn" ' +
-                    'style="margin-top: -12px;"></button>' +
+                  '<button type="button" data-id="line" class="ptro-color-btn ptro-bordered-btn"></button>' +
                   '<span class="ptro-btn-color-checkers"></span>' +
                 '</td>' +
               '</tr>' +
               '<tr>' +
-                `<td class="ptro-label ptro-resize-table-left" style="height:30px;">${tr('noteFillColorFull')}</td>` +
+                `<td class="ptro-label ptro-resize-table-left">${tr('noteFillColorFull')}</td>` +
                 '<td class="ptro-strict-cell">' +
-                  '<button type="button" data-id="noteFill" class="ptro-color-btn ptro-bordered-btn" ' +
-                  'style="margin-top: -12px;"></button>' +
+                  '<button type="button" data-id="noteFill" class="ptro-color-btn ptro-bordered-btn"></button>' +
                   '<span class="ptro-btn-color-checkers"></span>' +
                 '</td>' +
               '</tr>' +
               '<tr>' +
-                `<td class="ptro-label ptro-resize-table-left" style="height:30px;">${tr('lineWidthFull')}</td>` +
-                '<td class="ptro-strict-cell" colspan="2">' +
+                `<td class="ptro-label ptro-resize-table-left">${tr('lineWidthFull')}</td>` +
+                '<td class="ptro-strict-cell" >' +
                   '<select class="ptro-input ptro-line-width-input"></select>' +
                 '</td>' +
               '</tr>' +
               '<tr>' +
-                `<td class="ptro-label ptro-resize-table-left" style="height:30px;">${tr('fontNameFull')}</td>` +
-                '<td class="ptro-strict-cell" colspan="2">' +
+                `<td class="ptro-label ptro-resize-table-left">${tr('fontNameFull')}</td>` +
+                '<td class="ptro-strict-cell" >' +
                   '<select class="ptro-input ptro-font-input"></select>' +
                 '</td>' +
               '</tr>' +
               '<tr>' +
-                `<td class="ptro-label ptro-resize-table-left" style="height:30px;">${tr('textColorFull')}</td>` +
+                `<td class="ptro-label ptro-resize-table-left">${tr('textColorFull')}</td>` +
                 '<td class="ptro-strict-cell">' +
-                  '<button type="button" data-id="stroke" class="ptro-color-btn ptro-bordered-btn" ' +
-                  'style="margin-top: -12px;"></button>' +
+                  '<button type="button" data-id="stroke" class="ptro-color-btn ptro-bordered-btn"></button>' +
                   '<span class="ptro-btn-color-checkers"></span>' +
                 '</td>' +
               '</tr>' +
               '<tr>' +
-                `<td class="ptro-label ptro-resize-table-left" style="height:30px;">${tr('textSizeFull')}</td>` +
-                '<td class="ptro-strict-cell" colspan="2">' +
+                `<td class="ptro-label ptro-resize-table-left">${tr('fontSizeFull')}</td>` +
+                '<td class="ptro-strict-cell" >' +
                   '<select class="ptro-input ptro-font-size-input"></select>' +
                 '</td>' +
               '</tr>' +

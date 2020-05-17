@@ -15,8 +15,6 @@ export default {
   eraserWidthFull: 'Eraser width',
   textColor: 'C',
   textColorFull: 'Text color',
-  textSize: 'TS',
-  textSizeFull: 'Text size',
   fontSize: 'S',
   fontSizeFull: 'Font size',
   fontStrokeSize: 'St',

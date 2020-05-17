@@ -296,14 +296,17 @@ div.ptro-pallet {
 }
 
 .ptro-wrapper .ptro-settings-widget {
-    width: 300px;
+    width: 350px;
     padding: 10px;
     z-index: 100;
     box-sizing: border-box;
 }
 
+.ptro-wrapper .ptro-settings-widget tr {
+    height: 40px;
+}
+
 td.ptro-resize-table-left {
-    text-align: right;
     padding-right: 5px;
     float: none;
     font-size: 14px;
@@ -339,10 +342,10 @@ td.ptro-resize-table-left {
 
 .ptro-wrapper .ptro-color-alpha-label,
 .ptro-wrapper .ptro-label  {
-    text-align: left;
     padding: 0 2px 0 0;
     margin-left: 5px;
     font-family: "Open Sans", sans-serif;
+    white-space: nowrap;
 }
 
 .ptro-pixel-size-input {
@@ -411,6 +414,9 @@ select.ptro-input {
     padding-top: 0;
     padding-bottom: 0;
     padding-right: 0;
+    max-width: 130px;
+    height: 32px;
+    font-size: 14px;
 }
 
 .ptro-named-btn p {
@@ -456,7 +462,7 @@ span.ptro-btn-color-checkers {
     width: 32px;
     height: 32px;
     background-size: 16px 16px;
-    margin-top: -32px;
+    margin-top: -33px;
 }
 
 span.ptro-btn-color-checkers-bar {
@@ -582,14 +588,13 @@ i.mce-i-painterro:before, span.mce_painterro:before {
 }
 
 td.ptro-strict-cell {
-    font-size: 8px;
+    font-size: 12px;
     line-height: normal;
+    position: relative;
 }
 
 #notes-canvas {
     position: absolute;
-    /*left: 0;*/
-    /*top: 0;*/
     pointer-events: none;
     z-index: 10;
 }
