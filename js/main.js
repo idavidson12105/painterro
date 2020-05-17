@@ -6,10 +6,10 @@ import '../css/icons/ptroiconfont.css';
 
 import WorkLog from './worklog';
 import { genId, addDocumentObjectHelpers, KEYS, trim,
-  getScrollbarWidth, distance } from './utils';
+  getScrollbarWidth, distance, logError } from './utils';
 import PrimitiveTool from './primitive';
 import ColorPicker, { HexToRGB, rgbToHex } from './colorPicker';
-import { setDefaults, setParam, logError } from './params';
+import { setDefaults, setParam } from './params';
 import { tr } from './translation';
 import ZoomHelper from './zoomHelper';
 import TextTool from './text';
@@ -27,31 +27,31 @@ class PainterroProc {
     this.colorWidgetState = {
       line: {
         target: 'line',
-        palleteColor: this.params.activeColor,
+        paletteColor: this.params.activeColor,
         alpha: this.params.activeColorAlpha,
         alphaColor: this.params.activeAlphaColor,
       },
       fill: {
         target: 'fill',
-        palleteColor: this.params.activeFillColor,
+        paletteColor: this.params.activeFillColor,
         alpha: this.params.activeFillColorAlpha,
         alphaColor: this.params.activeFillAlphaColor,
       },
       noteFill: {
         target: 'noteFill',
-        palleteColor: this.params.activeNoteFillColor,
+        paletteColor: this.params.activeNoteFillColor,
         alpha: this.params.activeNoteFillColorAlpha,
         alphaColor: this.params.activeNoteFillAlphaColor,
       },
       bg: {
         target: 'bg',
-        palleteColor: this.params.backgroundFillColor,
+        paletteColor: this.params.backgroundFillColor,
         alpha: this.params.backgroundFillColorAlpha,
         alphaColor: this.params.backgroundFillAlphaColor,
       },
       stroke: {
         target: 'stroke',
-        palleteColor: this.params.textStrokeColor,
+        paletteColor: this.params.textStrokeColor,
         alpha: this.params.textStrokeColorAlpha,
         alphaColor: this.params.textStrokeAlphaColor,
       },
@@ -195,8 +195,8 @@ class PainterroProc {
       name: 'print',
       hotkey: 'p',
       activate: () => {
-        const dataUrl = this.imageSaver.asDataURL('image/png', 1);
-        printJS({printable: dataUrl, type: 'image', imageStyle: 'width:100%'});
+        const dataUrl = this.imageSaver.asDataURL('image/png', 1.0);
+        printJS({printable: dataUrl, type: 'image', style: '@page { size: auto;  margin: 0; }'});
         this.closeActiveTool();
       }
     }, {
@@ -374,20 +374,20 @@ class PainterroProc {
       this.doc.querySelector(
         `#${this.id} .ptro-color-btn[data-id='${widgetState.target}']`).style['background-color'] =
         widgetState.alphaColor;
-      const palletRGB = HexToRGB(widgetState.palleteColor);
+      const palletRGB = HexToRGB(widgetState.paletteColor);
       if (palletRGB !== undefined) {
-        widgetState.palleteColor = rgbToHex(palletRGB.r, palletRGB.g, palletRGB.b);
+        widgetState.paletteColor = rgbToHex(palletRGB.r, palletRGB.g, palletRGB.b);
         if (widgetState.target === 'line') {
-          setParam('activeColor', widgetState.palleteColor);
+          setParam('activeColor', widgetState.paletteColor);
           setParam('activeColorAlpha', widgetState.alpha);
         } else if (widgetState.target === 'fill') {
-          setParam('activeFillColor', widgetState.palleteColor);
+          setParam('activeFillColor', widgetState.paletteColor);
           setParam('activeFillColorAlpha', widgetState.alpha);
         } else if (widgetState.target === 'bg') {
-          setParam('backgroundFillColor', widgetState.palleteColor);
+          setParam('backgroundFillColor', widgetState.paletteColor);
           setParam('backgroundFillColorAlpha', widgetState.alpha);
         } else if (widgetState.target === 'stroke') {
-          setParam('textStrokeColor', widgetState.palleteColor);
+          setParam('textStrokeColor', widgetState.paletteColor);
           setParam('textStrokeColorAlpha', widgetState.alpha);
         }
       }

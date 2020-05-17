@@ -103,7 +103,7 @@ export default class ColorPicker {
 
   open(state, addCallback) {
     this.target = state.target;
-    this.palleteColor = state.palleteColor;
+    this.paletteColor = state.paletteColor;
     this.alpha = state.alpha;
     this.lightPosition = this.lightPosition || this.w - 1;
 
@@ -130,7 +130,7 @@ export default class ColorPicker {
     x = (x > this.w && this.w - 1) || x;
     y = (y > this.h && this.h - 1) || y;
     const p = this.ctx.getImageData(x, y, 1, 1).data;
-    this.palleteColor = rgbToHex(p[0], p[1], p[2]);
+    this.paletteColor = rgbToHex(p[0], p[1], p[2]);
     this.drawLighter();
     this.regetColor();
   }
@@ -225,7 +225,7 @@ export default class ColorPicker {
         alphaColor: HexToRGBA(color, 1),
         lightPosition: this.w - 1,
         alpha: 1,
-        palleteColor: color,
+        paletteColor: color,
         target: this.target,
       });
       if (this.addCallback !== undefined) {
@@ -233,7 +233,7 @@ export default class ColorPicker {
           alphaColor: HexToRGBA(color, 1),
           lightPosition: this.w - 1,
           alpha: 1,
-          palleteColor: color,
+          paletteColor: color,
           target: this.target,
         });
       }
@@ -266,7 +266,7 @@ export default class ColorPicker {
         alphaColor: this.alphaColor,
         lightPosition: this.lightPosition,
         alpha: this.alpha,
-        palleteColor: this.color,
+        paletteColor: this.color,
         target: this.target,
       });
     }
@@ -275,7 +275,7 @@ export default class ColorPicker {
         alphaColor: this.alphaColor,
         lightPosition: this.lightPosition,
         alpha: this.alpha,
-        palleteColor: this.color,
+        paletteColor: this.color,
         target: this.target,
       });
     }
@@ -308,8 +308,8 @@ export default class ColorPicker {
     const lightGradient = this.ctxLight.createLinearGradient(0, 0, this.w, 0);
     lightGradient.addColorStop(0, '#ffffff');
     lightGradient.addColorStop(0.05, '#ffffff');
-    lightGradient.addColorStop(0.95, this.palleteColor);
-    lightGradient.addColorStop(1, this.palleteColor);
+    lightGradient.addColorStop(0.95, this.paletteColor);
+    lightGradient.addColorStop(1, this.paletteColor);
     this.ctxLight.fillStyle = lightGradient;
     this.ctxLight.fillRect(0, 0, this.w, 15);
   }
