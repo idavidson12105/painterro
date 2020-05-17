@@ -1,9 +1,9 @@
 @font-face {
 	font-family: "ptroiconfont";
-	src: url("ptroiconfont.eot?843545dae96bc83284ff5cbe398135ae?#iefix") format("embedded-opentype"),
-url("ptroiconfont.woff?843545dae96bc83284ff5cbe398135ae") format("woff"),
-url("ptroiconfont.ttf?843545dae96bc83284ff5cbe398135ae") format("truetype"),
-url("ptroiconfont.svg?843545dae96bc83284ff5cbe398135ae#ptroiconfont") format("svg");
+	src: url("ptroiconfont.eot?cb2cfc14a96b95512e7fb01e139f2855?#iefix") format("embedded-opentype"),
+url("ptroiconfont.woff?cb2cfc14a96b95512e7fb01e139f2855") format("woff"),
+url("ptroiconfont.ttf?cb2cfc14a96b95512e7fb01e139f2855") format("truetype"),
+url("ptroiconfont.svg?cb2cfc14a96b95512e7fb01e139f2855#ptroiconfont") format("svg");
 	font-weight: normal;
     font-style: normal;
 }
@@ -61,60 +61,66 @@ url("ptroiconfont.svg?843545dae96bc83284ff5cbe398135ae#ptroiconfont") format("sv
 .ptro-icon-mirror:before {
 	content: "\f10d";
 }
-.ptro-icon-open:before {
+.ptro-icon-note:before {
 	content: "\f10e";
 }
-.ptro-icon-paste_extend_down:before {
+.ptro-icon-open:before {
 	content: "\f10f";
 }
-.ptro-icon-paste_extend_right:before {
+.ptro-icon-paste_extend_down:before {
 	content: "\f110";
 }
-.ptro-icon-paste_fit:before {
+.ptro-icon-paste_extend_right:before {
 	content: "\f111";
 }
-.ptro-icon-paste_over:before {
+.ptro-icon-paste_fit:before {
 	content: "\f112";
 }
-.ptro-icon-pipette:before {
+.ptro-icon-paste_over:before {
 	content: "\f113";
 }
-.ptro-icon-pixelize:before {
+.ptro-icon-pipette:before {
 	content: "\f114";
 }
-.ptro-icon-rect:before {
+.ptro-icon-pixelize:before {
 	content: "\f115";
 }
-.ptro-icon-redo:before {
+.ptro-icon-rect:before {
 	content: "\f116";
 }
-.ptro-icon-resize:before {
+.ptro-icon-redo:before {
 	content: "\f117";
 }
-.ptro-icon-rotate180:before {
+.ptro-icon-resize:before {
 	content: "\f118";
 }
-.ptro-icon-rotateL:before {
+.ptro-icon-rotate180:before {
 	content: "\f119";
 }
-.ptro-icon-rotateR:before {
+.ptro-icon-rotateL:before {
 	content: "\f11a";
 }
-.ptro-icon-save:before {
+.ptro-icon-rotateR:before {
 	content: "\f11b";
 }
-.ptro-icon-select:before {
+.ptro-icon-save:before {
 	content: "\f11c";
 }
-.ptro-icon-settings:before {
+.ptro-icon-select:before {
 	content: "\f11d";
 }
-.ptro-icon-text:before {
+.ptro-icon-settings:before {
 	content: "\f11e";
 }
-.ptro-icon-undo:before {
+.ptro-icon-text:before {
 	content: "\f11f";
 }
-.ptro-icon-unlinked:before {
+.ptro-icon-toggleNotes:before {
 	content: "\f120";
+}
+.ptro-icon-undo:before {
+	content: "\f121";
+}
+.ptro-icon-unlinked:before {
+	content: "\f122";
 }

@@ -10,72 +10,7 @@ export default class Inserter {
         handle: (img) => {
           this.main.fitImage(img);
         },
-      },
-      extend_down: {
-        internalName: 'extend_down',
-        handle: (img) => {
-          this.tmpImg = img;
-          const oldH = this.main.size.h;
-          const oldW = this.main.size.w;
-          const newH = oldH + img.naturalHeight;
-          const newW = Math.max(oldW, img.naturalWidth);
-          const tmpData = this.ctx.getImageData(0, 0, this.main.size.w, this.main.size.h);
-          this.main.resize(newW, newH);
-          this.main.clearBackground();
-          this.ctx.putImageData(tmpData, 0, 0);
-          this.main.adjustSizeFull();
-          if (img.naturalWidth < oldW) {
-            const offset = Math.round((oldW - img.naturalWidth) / 2);
-            this.main.select.placeAt(offset, oldH, offset, 0, img);
-          } else {
-            this.main.select.placeAt(0, oldH, 0, 0, img);
-          }
-          this.worklog.captureState();
-        },
-      },
-      extend_right: {
-        internalName: 'extend_right',
-        handle: (img) => {
-          this.tmpImg = img;
-          const oldH = this.main.size.h;
-          const oldW = this.main.size.w;
-          const newW = oldW + img.naturalWidth;
-          const newH = Math.max(oldH, img.naturalHeight);
-          const tmpData = this.ctx.getImageData(0, 0, this.main.size.w, this.main.size.h);
-          this.main.resize(newW, newH);
-          this.main.clearBackground();
-          this.ctx.putImageData(tmpData, 0, 0);
-          this.main.adjustSizeFull();
-          if (img.naturalHeight < oldH) {
-            const offset = Math.round((oldH - img.naturalHeight) / 2);
-            this.main.select.placeAt(oldW, offset, 0, offset, img);
-          } else {
-            this.main.select.placeAt(oldW, 0, 0, 0, img);
-          }
-          this.worklog.captureState();
-        },
-      },
-      paste_over: {
-        internalName: 'over',
-        handle: (img) => {
-          this.tmpImg = img;
-          const oldH = this.main.size.h;
-          const oldW = this.main.size.w;
-          if (img.naturalHeight <= oldH && img.naturalWidth <= oldW) {
-            this.main.select.placeAt(
-              0, 0,
-              oldW - img.naturalWidth,
-              oldH - img.naturalHeight, img);
-          } else if (img.naturalWidth / img.naturalHeight > oldW / oldH) {
-            const newH = oldW * (img.naturalHeight / img.naturalWidth);
-            this.main.select.placeAt(0, 0, 0, oldH - newH, img);
-          } else {
-            const newW = oldH * (img.naturalWidth / img.naturalHeight);
-            this.main.select.placeAt(0, 0, oldW - newW, 0, img);
-          }
-          this.worklog.captureState();
-        },
-      },
+      }
     };
     this.activeOption = this.pasteOptions;
   }
@@ -101,11 +36,6 @@ export default class Inserter {
     });
     this.loading = false;
     this.doLater = null;
-  }
-
-  insert(x, y, w, h) {
-    this.main.ctx.drawImage(this.tmpImg, x, y, w, h);
-    this.main.worklog.reCaptureState();
   }
 
   cancelChoosing() {
@@ -156,35 +86,6 @@ export default class Inserter {
     }
   }
 
-  handleKeyDown(evt) {
-    if (this.waitChoice && evt.keyCode === KEYS.esc) {
-      this.cancelChoosing();
-      return true;
-    }
-    if (!this.waitChoice && !this.main.select.imagePlaced && this.main.select.shown &&
-        evt.keyCode === KEYS.c && (evt.ctrlKey || evt.metaKey)) {
-      const a = this.main.select.area;
-      const w = a.bottoml[0] - a.topl[0];
-      const h = a.bottoml[1] - a.topl[1];
-      const tmpCan = this.main.doc.createElement('canvas');
-      tmpCan.width = w;
-      tmpCan.height = h;
-      const tmpCtx = tmpCan.getContext('2d');
-      tmpCtx.drawImage(this.main.canvas, -a.topl[0], -a.topl[1]);
-      copyToClipboard(this.CLIP_DATA_MARKER);
-      try {
-        localStorage.setItem(this.CLIP_DATA_MARKER, tmpCan.toDataURL());
-      } catch (e) {
-        console.warn(`Unable save image to localstorage: ${e}`);
-      }
-      return true;
-    }
-    if (this.waitChoice && event.keyCode === KEYS.enter) {
-      return true; // mark as handled - user might expect doing save by enter
-    }
-    return false;
-  }
-
   startLoading() {
     this.loading = true;
     const btn = this.main.doc.getElementById(this.main.toolByName.open.buttonId);
@@ -219,22 +120,6 @@ export default class Inserter {
     return instance;
   }
 
-  activeOptions(actOpt) {
-    const po = Object.keys(this.pasteOptions);
-    po.forEach((i) => {
-      let b = false;
-      actOpt.forEach((k) => {
-        if (i === k) {
-          b = true;
-        }
-      });
-      if (b === false) {
-        delete this.pasteOptions[i];
-      }
-    });
-    this.activeOption = this.pasteOptions;
-  }
-
   html() {
     let buttons = '';
     Object.keys(this.pasteOptions).forEach((k) => {
@@ -250,7 +135,4 @@ export default class Inserter {
       `<div class="ptro-paste-label">${tr('pasteOptions.how_to_paste')}</div>${
         buttons}</div></div></div>`;
   }
-}
-export function setActivePasteOptions(a) {
-  return Inserter.get().activeOptions(a);
 }

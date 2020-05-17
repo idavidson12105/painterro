@@ -1,7 +1,6 @@
 import { HexToRGBA } from './colorPicker';
 import { trim, logError } from './utils';
 import Translation, { activate } from './translation';
-import { setActivePasteOptions } from './inserter';
 
 const STORAGE_KEY = 'painterro-data';
 
@@ -42,9 +41,6 @@ export function setDefaults(parameters) {
   if (params.language) {
     activate(params.language);
   }
-  if (params.how_to_paste_actions) {
-    setActivePasteOptions(params.how_to_paste_actions);
-  }
   params.activeColor = settings.activeColor || params.activeColor || '#ff0000';
   params.activeColorAlpha = firstDefined(settings.activeColorAlpha, params.activeColorAlpha, 1.0);
   params.activeAlphaColor = HexToRGBA(params.activeColor, params.activeColorAlpha);
@@ -80,9 +76,9 @@ export function setDefaults(parameters) {
     params.textStrokeColorAlpha, 1.0);
   params.textStrokeAlphaColor = HexToRGBA(params.textStrokeColor, params.textStrokeColorAlpha);
 
-  params.availableLineWidths = [1, 2, 4, 8, 16];
+  params.availableLineWidths = [1, 2, 4, 8, 16, 32];
 
-  params.availableFontSizes = [1, 2, 4, 8, 16];
+  params.availableFontSizes = [8, 10, 12, 16, 20, 24, 32];
 
   params.availableFonts = [
     'Arial, Helvetica, sans-serif',
@@ -99,7 +95,7 @@ export function setDefaults(parameters) {
 
   params.worklogLimit = firstDefined(params.worklogLimit, 100);
 
-  params.defaultTool = params.defaultTool || 'select';
+  params.defaultTool = params.defaultTool || 'brush';
   params.hiddenTools = params.hiddenTools || ['redo'];
   const defaultInHiddenIndex = params.hiddenTools.indexOf(params.defaultTool);
   if (defaultInHiddenIndex > -1) {

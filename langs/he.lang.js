@@ -57,11 +57,11 @@ export default {
         open: 'Open image',
         select: 'Select area',
         close: 'Close Painterro',
-        eraser: 'Eraser',
-        settings: 'Settings',
+        eraser: 'מוחק',
+        settings: 'הגדרות',
+        print: 'הדפסה',
         undo: 'ביטול',
         redo: 'Redo',
-        print: 'הדפסה',
         measure: 'סרגל מדידה'
     },
     pasteOptions: {

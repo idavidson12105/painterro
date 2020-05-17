@@ -4,7 +4,6 @@ import '../css/styles.css';
 import '../css/bar-styles.css';
 import '../css/icons/ptroiconfont.css';
 
-import PainterroSelector from './selector';
 import WorkLog from './worklog';
 import { genId, addDocumentObjectHelpers, KEYS, trim,
   getScrollbarWidth, distance } from './utils';
@@ -17,6 +16,7 @@ import TextTool from './text';
 import Resizer from './resizer';
 import Inserter from './inserter';
 import Settings from './settings';
+import printJS from "print-js";
 
 require('es6-promise').polyfill();
 
@@ -60,33 +60,6 @@ class PainterroProc {
     this.currentBackgroundAlpha = this.colorWidgetState.bg.alpha;
 
     this.tools = [{
-      name: 'select',
-      hotkey: 's',
-      activate: () => {
-        this.toolContainer.style.cursor = 'crosshair';
-        this.select.activate();
-        this.select.draw();
-      },
-      close: () => {
-        this.select.close();
-        this.toolContainer.style.cursor = 'auto';
-      },
-      eventListener: () => this.select,
-    }, {
-      name: 'crop',
-      hotkey: 'c',
-      activate: () => {
-        this.select.doCrop();
-        this.closeActiveTool();
-      },
-    }, {
-      name: 'pixelize',
-      hotkey: 'p',
-      activate: () => {
-        this.select.doPixelize();
-        this.closeActiveTool();
-      },
-    }, {
       name: 'line',
       hotkey: 'l',
       activate: () => {
@@ -209,8 +182,7 @@ class PainterroProc {
         this.closeActiveTool();
       },
       eventListener: () => this.resizer,
-    },
-    {
+    }, {
       name: 'settings',
       activate: () => {
         this.settings.open();
@@ -219,6 +191,14 @@ class PainterroProc {
         this.settings.close();
       },
       eventListener: () => this.settings,
+    }, {
+      name: 'print',
+      hotkey: 'p',
+      activate: () => {
+        const dataUrl = this.imageSaver.asDataURL('image/png', 1);
+        printJS({printable: dataUrl, type: 'image', imageStyle: 'width:100%'});
+        this.closeActiveTool();
+      }
     }, {
       name: 'save',
       right: true,
@@ -311,7 +291,7 @@ class PainterroProc {
     this.inserter = Inserter.get();
 
     const cropper = '<div class="ptro-crp-el">' +
-      `${PainterroSelector.code()}${TextTool.code('text')}${TextTool.code('notes')}</div>`;
+      `${TextTool.code('text')}${TextTool.code('notes')}</div>`;
 
     this.loadedName = '';
     this.doc = document;
@@ -363,11 +343,6 @@ class PainterroProc {
     this.toolContainer = this.doc.querySelector(`#${this.id}-wrapper .ptro-crp-el`);
     this.substrate = this.doc.querySelector(`#${this.id}-wrapper .ptro-substrate`);
     this.zoomHelper = new ZoomHelper(this);
-    this.select = new PainterroSelector(this, (notEmpty) => {
-      [this.toolByName.crop, this.toolByName.pixelize].forEach((c) => {
-        this.setToolEnabled(c, notEmpty);
-      });
-    });
     this.resizer = new Resizer(this);
     this.settings = new Settings(this);
     this.primitiveTool = new PrimitiveTool(this);
@@ -688,7 +663,6 @@ class PainterroProc {
               this.zoom = true;
             }
             this.adjustSizeFull();
-            this.select.adjustPosition();
             if (this.zoom) {
               this.scroller.scrollLeft = (this.curCord[0] / this.getScale()) -
                 (e.clientX - this.wrapper.documentOffsetLeft);
@@ -738,68 +712,7 @@ class PainterroProc {
             }
           }
         }
-      },
-      paste: (event) => {
-        if (this.shown) {
-          const items = (event.clipboardData || event.originalEvent.clipboardData).items;
-          Object.keys(items).forEach((k) => {
-            const item = items[k];
-            if (item.kind === 'file' && item.type.split('/')[0] === 'image') {
-              this.openFile(item.getAsFile());
-              event.preventDefault();
-              event.stopPropagation();
-            } else if (item.kind === 'string') {
-              let txt = '';
-              if (window.clipboardData && window.clipboardData.getData) { // IE
-                txt = window.clipboardData.getData('Text');
-              } else if (event.clipboardData && event.clipboardData.getData) {
-                txt = event.clipboardData.getData('text/plain');
-              }
-              if (txt.startsWith(this.inserter.CLIP_DATA_MARKER)) {
-                let img;
-                try {
-                  img = localStorage.getItem(this.inserter.CLIP_DATA_MARKER);
-                } catch (e) {
-                  console.warn(`Unable get from localstorage: ${e}`);
-                  return;
-                }
-                this.loadImage(img);
-                event.preventDefault();
-                event.stopPropagation();
-              }
-            }
-          });
-        }
-      },
-      dragover: (event) => {
-        if (this.shown) {
-          const mainClass = event.target.classList[0];
-          if (mainClass === 'ptro-crp-el' || mainClass === 'ptro-bar') {
-            this.bar.className = 'ptro-bar ptro-color-main ptro-bar-dragover';
-          }
-          event.preventDefault();
-        }
-      },
-      dragleave: () => {
-        if (this.shown) {
-          this.bar.className = 'ptro-bar ptro-color-main';
-        }
-      },
-      drop: (event) => {
-        if (this.shown) {
-          this.bar.className = 'ptro-bar ptro-color-main';
-          event.preventDefault();
-          const file = event.dataTransfer.files[0];
-          if (file) {
-            this.openFile(file);
-          } else {
-            const text = event.dataTransfer.getData('text/html');
-            const srcRe = /src.*?=['"](.+?)['"]/;
-            const srcMatch = srcRe.exec(text);
-            this.inserter.handleOpen(srcMatch[1]);
-          }
-        }
-      },
+      }
     };
 
     this.windowHandlers = {
@@ -951,7 +864,6 @@ class PainterroProc {
       this.ratioRelation = 0;
     }
     this.syncToolElement();
-    this.select.draw();
   }
 
   resize(x, y) {
@@ -1064,4 +976,4 @@ class PainterroProc {
   }
 }
 
-module.exports = params => new PainterroProc(params);
+export default params => new PainterroProc(params);

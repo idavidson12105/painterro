@@ -88,7 +88,6 @@ export default class WorkLog {
     this.main.resize(state.sizew, state.sizeh);
     this.main.ctx.putImageData(state.data, 0, 0);
     this.main.adjustSizeFull();
-    this.main.select.hide();
   }
 
   undoState() {
